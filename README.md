@@ -1,2 +1,2 @@
-# build-wait-action
-Waits for an Algorithm build process to finish, returns the build result
+# build-wait github action
+Waits for an www.algorithmia.com Algorithm build process to finish, returns the build result
