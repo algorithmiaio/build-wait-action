@@ -5,15 +5,22 @@ import requests
 import time
 
 
-#TODO: Make sure this works even when a build id isn't visible just yet
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token):
+        self.token = token
+
+    def __call__(self, r):
+        r.headers["authorization"] = "Simple " + self.token
+        return r
+
+
+# TODO: Make sure this works even when a build id isn't visible just yet
 def get_build_id(api_key, api_address, algo_name, hash, marker=None):
-    headers = {'content-type': 'application/json', 'Authorization': "Simple {}".format(api_key)}
     if marker:
-        url = "{}/{}/builds?limit={}&marker={}".format(api_address, algo_name, 10, marker)
+        url = "{}/v1/algorithms/{}/builds?limit={}&marker={}".format(api_address, algo_name, 10, marker)
     else:
-        url = "{}/{}/builds?limit={}".format(api_address, algo_name, 10)
-    response = requests.get(headers=headers, url=url)
-    result = response.json()
+        url = "{}/v1/algorithms/{}/builds?limit={}".format(api_address, algo_name, 10)
+    result = get_api_request(url, api_key)
     if "error" in result:
         raise Exception(result['error']['message'])
     else:
@@ -28,24 +35,29 @@ def get_build_id(api_key, api_address, algo_name, hash, marker=None):
 
 def wait_for_result(api_key, api_address, algo_name, build_id):
     waiting = True
-    headers = {'content-type': 'application/json', 'Authorization': "Simple {}".format(api_key)}
-    url = "{}/{}/builds/{}".format(api_address, algo_name, build_id)
+    url = "{}/v1/algorithms/{}/builds/{}".format(api_address, algo_name, build_id)
+    url_logs = "{}/v1/algorithms/{}/builds/{}/logs".format(api_address, algo_name, build_id)
     while waiting:
-        response = requests.get(headers=headers, url=url)
-        result = response.json()
+        result = get_api_request(url, api_key)
         if "error" in result:
             raise Exception(result['error']['message'])
         else:
-            if result['status'] != "in-progress":
-                if result['status'] is "succeeded":
-                    return
+            if result['status'] != u'in-progress':
+                if result['status'] == u'succeeded':
+                    waiting = False
                 else:
-                    url_logs = "{}/{}/builds/{}/logs".format(api_address, algo_name, build_id)
-                    response = requests.get(headers=headers, url=url_logs)
-                    results = response.json()
-                    raise Exception("build failure:\n{}".format(results['logs']))
+                    log_data = get_api_request(url_logs, api_key)
+                    raise Exception("build failure:\n{}".format(log_data['logs']))
             else:
                 time.sleep(5)
+
+
+def get_api_request(url, api_key):
+    response = requests.get(auth=BearerAuth(api_key), url=url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception("request failed with status: {}".format(response.status_code))
 
 
 if __name__ == "__main__":
