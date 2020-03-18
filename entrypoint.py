@@ -52,7 +52,7 @@ if __name__ == "__main__":
     api_key = os.getenv("INPUT_API_KEY")
     api_address = os.getenv("INPUT_API_ADDRESS")
     algo_name = os.getenv("INPUT_ALGORITHM_NAME")
-    algo_hash = os.getenv("INPUT_ALGORITHM_HASH")
+    algo_hash = os.getenv("GITHUB_SHA")
     print("--- Finding build in progress ---")
     build_id = get_build_id(api_key, api_address, algo_name, algo_hash)
     print("--- Build ID found, waiting for result ---")
