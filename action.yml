@@ -1,6 +1,6 @@
 # action.yml
-name: 'Algorithmia test-algo'
-description: 'End-to-end testing of algorithms hosted on Github'
+name: 'Algorithmia build-wait'
+description: 'Wait for an algorithmia build operation to complete'
 branding:
   icon: 'alert-circle'
   color: 'purple'
