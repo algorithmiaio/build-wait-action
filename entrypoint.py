@@ -61,7 +61,7 @@ def get_api_request(url, api_key):
 
 
 if __name__ == "__main__":
-    api_key = os.getenv("INPUT_API_KEY")
+    api_key = os.getenv("INPUT_MGMT_API_KEY")
     api_address = os.getenv("INPUT_API_ADDRESS")
     algo_name = os.getenv("INPUT_ALGORITHM_NAME")
     algo_hash = os.getenv("GITHUB_SHA")
