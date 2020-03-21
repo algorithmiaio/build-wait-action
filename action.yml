@@ -5,7 +5,7 @@ branding:
   icon: 'alert-circle'
   color: 'purple'
 inputs:
-  api_key:
+  api_mgmt_key:
     description: 'your Algorithmia API key'
     required: true
   api_address:

@@ -9,8 +9,8 @@ In the event of a build failure, this action will provide docker build logs as w
 
 ```
 inputs:
-  api_key:
-    description: 'your Algorithmia API key'
+  api_mgmt_key:
+    description: 'your Algorithmia Management API key'
     required: true
   api_address:
     description: 'The API address for the Algorithmia Cluster you wish to connect to'
@@ -21,7 +21,7 @@ inputs:
     required: true
  ```
  
-* api_key - (required) - your Algorithmia Management API key, which you can learn about [here](https://algorithmia.com/developers/platform/customizing-api-keys).
+* api_mgmt_key - (required) - your Algorithmia Management API key, which you can learn about [here](https://algorithmia.com/developers/platform/customizing-api-keys).
 * algorithm_name (required) - The algorithmia algorithm name for project you're testing. This algorithm name must refer to the github repository you attach this action to in order to work properly.
 * api_address - (optional) - The Algorithmia API cluster address you wish to connect to, if using a private cluster; please provide the correct path to your environment.
 
@@ -42,7 +42,7 @@ jobs:
       uses: algorithmiaio/build-wait-action@v0.1.0-rc4
       id: build-wait-step
       with:
-        api_key: {{ secrets.ALGORITHMIA_API_KEY }}
+        api_mgmt_key: {{ secrets.ALGORITHMIA_API_KEY }}
         api_address: {{ secrets.ALGORITHMIA_API_ADDRESS }}
         algorithm_name: your_username/your_algorithm
 ```
